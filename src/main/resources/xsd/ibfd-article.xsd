@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="unqualified"
+           attributeFormDefault="unqualified">
+
+    <xs:element name="country-chap">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="chaphead" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="volume" type="xs:string" minOccurs="0"/>
+                            <xs:element name="number" type="xs:string" minOccurs="0"/>
+                            <xs:element name="month" type="xs:string" minOccurs="0"/>
+                            <xs:element name="year" type="xs:string" minOccurs="1"/>
+                            <xs:element name="pubsection" type="xs:string" minOccurs="0"/>
+                            <xs:element name="pubdate" minOccurs="1">
+                                <xs:complexType mixed="true">
+                                    <xs:attribute name="pubdate" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="title" type="xs:string" minOccurs="1"/>
+                            <xs:element name="country" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="author" type="xs:string" minOccurs="0"/>
+                            <xs:element name="summary" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="anchor" type="xs:string" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="chapbody" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="section" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="collection" type="xs:string" use="required"/>
+            <xs:attribute name="doi" type="xs:string" use="optional"/>
+            <xs:attribute name="infotype" type="xs:string" use="optional"/>
+            <xs:attribute name="pdf" type="xs:string" use="optional"/>
+            <xs:attribute name="anchor" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
