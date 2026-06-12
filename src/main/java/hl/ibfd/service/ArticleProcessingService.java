@@ -49,13 +49,6 @@ public class ArticleProcessingService {
         log.info("Loading article XML: {}", articleXml);
         Document articleDoc = xmlLoaderService.load(articleXml);
 
-        log.info("Validating article XML");
-        XmlValidationService.ValidationResult validation =
-                xmlValidationService.validateWellFormed(articleDoc);
-        if (!validation.isValid()) {
-            throw new IllegalStateException("Article XML is not well-formed: " + validation.getErrors());
-        }
-
         log.info("Validating required elements");
         XmlValidationService.ValidationResult requiredValidation =
                 xmlValidationService.validateRequiredElements(articleDoc, getRequiredElementXPaths());

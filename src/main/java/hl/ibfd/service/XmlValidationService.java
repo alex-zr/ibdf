@@ -30,12 +30,6 @@ public class XmlValidationService {
 
     private static final Logger log = LoggerFactory.getLogger(XmlValidationService.class);
 
-    public ValidationResult validateWellFormed(Document document) {
-        Objects.requireNonNull(document, "document must not be null");
-        log.debug("Document is well-formed (already verified by parser).");
-        return new ValidationResult(true, Collections.emptyList());
-    }
-
     public ValidationResult validateRequiredElements(Document document, List<String> requiredElementXPaths) {
         Objects.requireNonNull(document, "document must not be null");
         if (requiredElementXPaths == null || requiredElementXPaths.isEmpty()) {
