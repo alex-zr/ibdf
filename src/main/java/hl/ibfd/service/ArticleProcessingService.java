@@ -33,9 +33,6 @@ public class ArticleProcessingService {
     @Value("${app.schematron:classpath:schematron/pubdate-validation.sch}")
     private String schematronResource;
 
-    @Value("${app.xsd:classpath:xsd/ibfd-article.xsd}")
-    private String xsdResource;
-
     public ArticleProcessingService(XmlLoaderService xmlLoaderService,
                                     XmlValidationService xmlValidationService,
                                     CollectionLookupService collectionLookupService,
@@ -49,10 +46,6 @@ public class ArticleProcessingService {
     }
 
     public ProcessingResult processArticle(Path articleXml, Path collectionsXml, Path xsl) {
-        return processArticle(articleXml, collectionsXml, xsl, null);
-    }
-
-    public ProcessingResult processArticle(Path articleXml, Path collectionsXml, Path xsl, Path xsd) {
         log.info("Loading article XML: {}", articleXml);
         Document articleDoc = xmlLoaderService.load(articleXml);
 
@@ -68,13 +61,6 @@ public class ArticleProcessingService {
                 xmlValidationService.validateRequiredElements(articleDoc, getRequiredElementXPaths());
         if (!requiredValidation.isValid()) {
             throw new IllegalStateException("Missing required elements: " + requiredValidation.getErrors());
-        }
-
-        log.info("Validating against XSD");
-        XmlValidationService.ValidationResult xsdValidation =
-                xmlValidationService.validateAgainstXsd(articleDoc, xsd);
-        if (!xsdValidation.isValid()) {
-            log.warn("XSD validation warnings: {}", xsdValidation.getErrors());
         }
 
         log.info("Looking up collection name from collections.xml: {}", collectionsXml);
@@ -94,8 +80,7 @@ public class ArticleProcessingService {
         Path article = resolve(articleXmlResource);
         Path collections = resolve(collectionsXmlResource);
         Path xsl = resolve(xslResource);
-        Path xsd = resolve(xsdResource);
-        return processArticle(article, collections, xsl, xsd);
+        return processArticle(article, collections, xsl);
     }
 
     public SchematronValidationService.ValidationOutcome validateSchematron(Path schematron, Path instance) {

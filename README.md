@@ -40,10 +40,10 @@ src/main/resources
 
 ## How to Run
 
-### 1. Run the test suite
+### 1. Build the project
 
 ```bash
-mvn test
+mvn package
 ```
 
 ### 2. Generate HTML only

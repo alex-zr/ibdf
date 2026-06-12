@@ -36,28 +36,6 @@ public class XmlValidationService {
         return new ValidationResult(true, Collections.emptyList());
     }
 
-    public ValidationResult validateAgainstXsd(Document document, Path xsdFile) {
-        Objects.requireNonNull(document, "document must not be null");
-        if (xsdFile == null || !Files.exists(xsdFile)) {
-            log.debug("No XSD provided, skipping XSD validation.");
-            return new ValidationResult(true, Collections.emptyList());
-        }
-        log.debug("Validating against XSD: {}", xsdFile);
-        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        CollectingErrorHandler errorHandler = new CollectingErrorHandler();
-        try (InputStream is = Files.newInputStream(xsdFile)) {
-            Schema schema = sf.newSchema(new StreamSource(is));
-            Validator validator = schema.newValidator();
-            validator.setErrorHandler(errorHandler);
-            validator.validate(new javax.xml.transform.dom.DOMSource(document));
-        } catch (SAXException | IOException e) {
-            errorHandler.errors.add("XSD validation error: " + e.getMessage());
-        }
-        boolean valid = errorHandler.errors.isEmpty();
-        log.debug("XSD validation result: {} ({} errors)", valid, errorHandler.errors.size());
-        return new ValidationResult(valid, errorHandler.errors);
-    }
-
     public ValidationResult validateRequiredElements(Document document, List<String> requiredElementXPaths) {
         Objects.requireNonNull(document, "document must not be null");
         if (requiredElementXPaths == null || requiredElementXPaths.isEmpty()) {
@@ -94,25 +72,6 @@ public class XmlValidationService {
 
         public List<String> getErrors() {
             return errors;
-        }
-    }
-
-    private static class CollectingErrorHandler implements ErrorHandler {
-        private final List<String> errors = new ArrayList<>();
-
-        @Override
-        public void warning(SAXParseException exception) {
-            errors.add("Warning: " + exception.getMessage());
-        }
-
-        @Override
-        public void error(SAXParseException exception) {
-            errors.add("Error: " + exception.getMessage());
-        }
-
-        @Override
-        public void fatalError(SAXParseException exception) {
-            errors.add("Fatal: " + exception.getMessage());
         }
     }
 }
